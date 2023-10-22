@@ -40,6 +40,9 @@ AWS_REGION="us-east-1"
 
 # Name of AWS API Gateway that you created.
 API_NAME="ExampleAPIGateway-Name"
+
+# Full path to CloudFormation templates.
+CF_TEMPLATE_PATH="/fill/path/to/cloudformation/templates"
 '''
 # Load the environment variables for AWS credentials from the specified path.
 load_dotenv(os.environ.get("AWS_ENV_PATH"))
@@ -49,6 +52,9 @@ AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_REGION = os.environ.get("AWS_REGION")
 API_NAME = os.environ.get("API_NAME")
+
+# Template path for the CloudFormation templates.
+CF_TEMPLATE_PATH = os.environ.get("CF_TEMPLATE_PATH")
 
 # List of allowed extensions for images.
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -134,7 +140,7 @@ def create_infra():
     try:
         cf.create_stack(
             StackName=stack_name,
-            TemplateBody=open("/full/path/to/01-cloud-mania-s3-template.yaml", 'r').read(),
+            TemplateBody=open(f"{CF_TEMPLATE_PATH}/01-cloud-mania-s3-template.yaml", 'r').read(),
             Capabilities=["CAPABILITY_NAMED_IAM"]
         )
         stack_status_complete = False
@@ -156,7 +162,7 @@ def create_infra():
             "07-cloud-mania-add-s3-deletion-function.yaml"
         ]
         for template in templates:
-            template_path = f"/full/path/to/AWS-CF-Templates-Cloud-Mania-Passport-Photo-Screening/{template}"
+            template_path = f"{CF_TEMPLATE_PATH}/{template}"
             cf.update_stack(
                 StackName=stack_name,
                 TemplateBody=open(template_path, 'r').read(),
@@ -298,7 +304,9 @@ def get_validation_result(image_name):
 # Function to refresh the GUI.
 def refresh_gui():
     # Resetting the preview label.
-    preview_label.config(image=None, text="")
+    preview_label.config(image=None)
+    # Resetting the image in the preview label.
+    preview_label.image=None
     # Resetting the message label.
     message_label.config(text="")
     # Resetting the results label.
@@ -343,6 +351,9 @@ def toggle_destroy_button():
     else:
         # Disable the destroy_button if the destroy_check_var is not checked.
         destroy_button.config(state=tk.DISABLED)
+        # Enable the create_button and bucket_entry if the destroy_check_var is not checked.
+        upload_button.config(state=tk.NORMAL)
+        bucket_entry.config(state=tk.NORMAL)
     
 # Creating the main GUI window.
 root = tk.Tk()
@@ -411,7 +422,7 @@ preview_frame.pack(pady=10, padx=10)
 # Ensure the frame doesn't shrink. If you want it to expand to fit the image, you can omit this.
 preview_frame.pack_propagate(False)
 # Creating and placing the label to display the image preview on the GUI.
-preview_label = tk.Label(preview_frame, image=None)
+preview_label = tk.Label(preview_frame)
 # Placing the image preview label in the frame.
 preview_label.pack(pady=10)
 
