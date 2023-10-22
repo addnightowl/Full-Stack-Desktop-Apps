@@ -1,0 +1,27 @@
+# misc
+*.pem
+*.txt
+*.out
+*.log
+*.pid
+*.gz
+*.zip
+*.tar.gz
+*.tgz
+*.swp
+*.swo
+*.swn
+*.swo
+*.swp
+*.swn
+
+# python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# environment
+.env
+.DS_Store
+.github/.DS_Store
