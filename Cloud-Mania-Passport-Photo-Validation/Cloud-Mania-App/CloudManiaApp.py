@@ -1,6 +1,10 @@
 '''
-Tkinter GUI application that allows users to upload images to our Cloud Mania S3 Bucket for passport validation
-and view the results of that image.
+This is the main Python script for the Cloud Mania Passport Photo Validation App.
+This script creates the main GUI window and handles the following operations:
+    - Create the infrastructure using AWS CloudFormation.
+    - Upload the Passport Photo to the specified S3 bucket.
+    - Validate the Passport Photo using the AWS API Gateway endpoint.
+    - Destroy the infrastructure using AWS CloudFormation.
 '''
 
 # Importing necessary modules for the GUI, file dialog, AWS connection, and other utilities.
